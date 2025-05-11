@@ -1,0 +1,267 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Dashboard {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Header -->
+    <div class="header bg-primary pb-6">
+      <div class="container-fluid">
+        <div class="header-body">
+          <!-- Card stats -->
+          <div class="row">
+            <div class="col-xl-3 col-md-6">
+              <div class="card card-stats">
+                <!-- Card body -->
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col">
+                      <h5 class="card-title text-uppercase text-muted mb-0">Total Investment</h5>
+
+                      <span class="h2 font-weight-bold mb-0">Rs.{{ total_investment|float|round(2) }}</span>
+                    </div>
+                    <div class="col-auto">
+                      <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                        <i class="ni ni-chart-pie-35"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+              <div class="card card-stats">
+                <!-- Card body -->
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col">
+                      <h5 class="card-title text-uppercase text-muted mb-0">Portfolio</h5>
+                      <span class="h2 font-weight-bold mb-0">s</span>
+                    </div>
+                    <div class="col-auto">
+                      <div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
+                        <i class="ni ni-chart-pie-35"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+              <div class="card card-stats">
+                <!-- Card body -->
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col">
+                      <h5 class="card-title text-uppercase text-muted mb-0">Total Profit</h5>
+                      <span class="h2 font-weight-bold mb-0">4.24%</span>
+                    </div>
+                    <div class="col-auto">
+                      <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
+                        <i class="ni ni-money-coins"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+              <div class="card card-stats">
+                <!-- Card body -->
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col">
+                      <h5 class="card-title text-uppercase text-muted mb-0">Expected Profit</h5>
+                      <span class="h2 font-weight-bold mb-0">9.65%</span>
+                    </div>
+                    <div class="col-auto">
+                      <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                        <i class="ni ni-chart-bar-32"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page content -->
+    <div class="container-fluid mt--6">
+      <div class="row mb-5">
+        <div class="col-xl-8">
+          <div class="card bg-default" style="height: 100%">
+            <div class="card-header bg-transparent">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h6 class="text-light text-uppercase ls-1 mb-1">Highest Invested Stock</h6>
+                  <h5 class="h3 text-white mb-0">Price Chart</h5>
+                </div>
+                
+              </div>
+            </div>
+            
+            <div class="card-body" style="height: 100%;">
+              <!-- Chart -->
+              <div class="chart">
+                <!-- Chart wrapper -->
+                <canvas id="indexgraph" class="chart-canvas"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-4">
+          <div class="card">
+            <div class="card-header bg-transparent">
+              <div class="row align-items-center">
+                <div class="col">
+                  <!-- Put pie chart instead of bar graph of investment--> 
+                  <h5 class="h3 mb-0">Money Distribution</h5>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <!-- Chart -->
+              <canvas id="stockChart" width="600" height="600" ></canvas>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+  <div class="row">
+  <div class="col">
+    <div class="card bg-default shadow">
+      <div class="card-header bg-transparent border-0">
+        <h3 class="text-white mb-0">Trade History</h3>
+      </div>
+      <div class="table-responsive">
+        <table class="table align-items-center table-dark table-flush">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">Trade ID</th>
+              <th scope="col">Category</th>
+              <th scope="col">Duration</th>
+              <th scope="col">Total Investment</th>
+            </tr>
+          </thead>
+          <tbody class="list">
+            {% for trade in trade %}
+            <tr>
+              <th scope="row">
+                <div class="media align-items-center">
+                  <div class="media-body">
+                    <span class="name mb-0 text-sm">{{trade.trade_id}}</span>
+                  </div>
+                </div>
+              </th>
+              <td>
+                <span class="badge badge-dot mr-4">
+                  <i lass="bg-warning"></i>
+                  <span class="status">{{trade.category}}</span>
+
+                </span>
+              </td>
+              <td>
+                <span class="badge badge-dot mr-4">
+                  <i class="bg-warning"></i>
+
+                  <span class="status">{{trade.duration}}</span>
+
+                </span>
+              </td>
+              <td>
+                <span class="badge badge-dot mr-4">
+                  <i class="bg-warning"></i>
+
+                  <span class="status">Rs. {{trade.amount|float|round(2)}}</span>
+
+                </span>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+<script src="/static/assets/vendor/chart.js/dist/Chart.min.js"></script>
+<script src="/static/assets/vendor/chart.js/dist/Chart.extension.js"></script>
+
+<script>
+
+  // Sample stock data
+  var ctx = document.getElementById('stockChart').getContext('2d');
+  
+  var labels = JSON.parse('{{labels_json | safe }}');
+  var data = JSON.parse('{{ data_json | safe }}');
+  // console.log(labels)
+
+  var pieChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: data,
+        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4CAF50','#00008B'],
+      }],
+    },
+  });
+
+    // Sample stock data
+
+    var past = "{{ past }}"
+    var future = "{{ future }}"
+    past = past.replace(/&#34;/g, '"');
+    future = future.replace(/&#34;/g, '"');
+    past  = JSON.parse(past)
+    future  = JSON.parse(future)
+    
+    future = Array.from({ length: 60 }, () => null).concat(future)
+    future[59] = past[59]
+
+    
+        var element = document.getElementById("indexgraph");
+        var ctx = element.getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [...Array(68).keys()].map(num => num + 1),
+                datasets: [{
+                    label: labels[0],
+                    data: past,
+                    borderColor: 'rgb(75, 192, 192)',
+                    fill: true,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)'
+                },
+                {
+                  label: 'Pridictions',
+                  data: future,
+                  borderColor: 'rgba(255, 165, 0, 1)',
+                  fill: true,
+                  backgroundColor: 'rgba(255, 165, 0, 0.2)'
+              }
+                ]
+            }
+            
+        });
+
+   
+    
+</script>
+
+
+{% endblock javascripts %}

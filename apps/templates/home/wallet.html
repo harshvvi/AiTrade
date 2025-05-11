@@ -1,0 +1,187 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Profile {% endblock title %}
+
+{% block content %}
+
+<head>
+  <title>Button and Submission Box Example</title>
+
+  <style>
+      .submission-box {
+          display: flex;
+      }
+      .button-container {
+          display: flex;
+          justify-content: right;
+            gap: 10px;
+            margin-bottom: 20px; /* Add margin at the bottom */
+        }
+        .btn1{
+
+margin-right: 100px;
+
+}
+
+  </style>
+</head>
+
+<div class="header pb-6 d-flex align-items-center" 
+     style="min-height: 300px; background-image: url(/static/assets/img/theme/profile-cover.jpg); background-size: cover; background-position: center top;">
+  <span class="mask bg-gradient-default opacity-8"></span>
+  <div class="col-xl-4 align-items-center py-4" ></div>
+  
+  <div class="col-xl-3 col-md-6 " >
+    <div class="card card-stats btn1" style="right: 300px; top:40px">
+      <div class="card-body "  >
+        <div class="row" >
+          <div class="col">
+            <h5 class="card-title text-uppercase text-muted mb-0">WALLET BALANCE </h5>
+            <span class="h2 font-weight-bold mb-0">Rs. {{ current_user.current_balance }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="row align-items-center py-4" style="right:4000px">
+    <div class="col align-items-center py-4">
+      
+      <div class="add-money-form" style="display: none;">
+        <form role="form" method="post" action="">
+          {{ add_form.hidden_tag() }}
+          <div class="form-group mb-3">
+            <div class="input-group input-group-alternative" style="right: 250px; top:26px ; width: 210px;">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="ni ni-single-02"></i></span>
+              </div>
+              {{ add_form.moneytoadd(placeholder="MoneytoAdd",class="form-control") }}
+            </div>
+          </div>
+          <div class="text-center"  style="right:500px">
+            <button type="submit" name="add" class="btn btn-primary my-4" style="top:20px;right:250px">Add</button>
+          </div>
+        </form>
+      </div>
+      
+      <button class="btn btn-primary btn-neutral show-form-button btn1" 
+              onclick="toggleFormDisplay('add-money-form')" style="right: 250px; top:26px ; height: 80px; width: 210px;">Add Money</button>
+      
+      <div class="withdraw-money-form" style="display: none;">
+        <form role="form" method="post" action="">
+          {{ withdraw_form.hidden_tag() }}
+          <div class="form-group mb-3">
+            <div class="input-group input-group-alternative">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="ni ni-single-02"></i></span>
+              </div>
+              {{ withdraw_form.moneytowithdraw(placeholder="MoneytoWithdraw",class="form-control") }}
+            </div>
+          </div>
+          <div class="text-center">
+            <button type="submit" name="withdraw" class="btn btn-primary my-4" >Withdraw</button>
+          </div>
+        </form>
+      </div>
+      
+      <button class="btn btn-primary btn-neutral show-form-button btn1" 
+      style="right: 100px; top:26px ;height: 80px;width: 210px;"
+              onclick="toggleFormDisplay('withdraw-money-form')">Withdraw Money</button>
+      
+      <script>
+        function toggleFormDisplay(formClassName) {
+          const form = document.querySelector(`.${formClassName}`);
+          const showFormButton = form.nextElementSibling;
+
+          if (form.style.display === "none") {
+            form.style.display = "block";
+            showFormButton.style.display = "none";
+          } else {
+            form.style.display = "none";
+            showFormButton.style.display = "block";
+          }
+        }
+      </script>
+    </div>
+  </div>
+</div>
+
+
+<!-- Page content -->
+<br>
+<div class="row">
+  <div class="col">
+    <div class="card bg-default shadow">
+      <div class="card-header bg-transparent border-0">
+        <h3 class="text-white mb-0">Transaction History</h3>
+      </div>
+      <div class="table-responsive">
+        <table class="table align-items-center table-dark table-flush">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">Stock</th>
+              <th scope="col">Price</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Total Investment</th>
+              <th scope="col">Date and Time</th>
+              <th scope="col"> Transaction_ID</th>
+            </tr>
+          </thead>
+          <tbody class="list">
+            {% for transaction in transaction %}
+            <tr>
+              <th scope="row">
+                <div class="media align-items-center">
+                  <div class="media-body">
+                    <span class="name mb-0 text-sm">{{transaction.Stock_name}}</span>
+                  </div>
+                </div>
+              </th>
+              <td>
+                <span class="badge badge-dot mr-4">
+                  <i class="bg-warning"></i>
+                  <span class="status">Rs.{{transaction.Price|float|round(2)}}</span>
+                </span>
+              </td>
+              <td>
+                <span class="badge badge-dot mr-4">
+                  <i class="bg-warning"></i>
+                  <span class="status">{{transaction.quantity|float|round(2)}}</span>
+                </span>
+              </td>
+              <td>
+                <span class="badge badge-dot mr-4">
+                  <i class="bg-warning"></i>
+                  <span class="status">{{(transaction.quantity * transaction.Price)|float|round(2)}}</span>
+                </span>
+              </td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <span>{{transaction.date_time}}</span>
+                </div>
+                <td class="budget">
+                  3237543853248
+                 </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Card body -->
+
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+<script>
+  function clearInput() {
+      var inputField = document.getElementById("moneytoadd");
+      inputField.value = "";  // Clear the input field value
+  }
+</script>
+{% endblock javascripts %}

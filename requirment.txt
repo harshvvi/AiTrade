@@ -1,0 +1,43 @@
+alembic==1.11.3
+apscheduler-3.10.3 
+bcrypt==4.0.1
+beautifulsoup4==4.12.2
+blinker==1.6.2
+certifi==2023.7.22
+charset-normalizer==3.2.0
+click== 8.1.6
+dateutils==0.6.12
+dnspython==2.4.2
+email-validator==2.0.0.post2
+Flask==2.3.2
+Flask-Bcrypt==1.0.1
+Flask-Login==0.6.2
+Flask-Migrate==4.0.4
+Flask-SQLAlchemy==3.0.5
+Flask-WTF==1.1.1
+idna==3.4
+itsdangerous==2.1.2
+Jinja2==3.1.2
+lxml==4.9.3
+Mako==1.2.4
+MarkupSafe==2.1.3
+nsepy== 0.8
+nsetools== 1.0.11
+numpy== 1.25.2
+pandas==2.0.3
+Pillow==10.0.0
+python-dateutil==2.8.2
+python-decouple==3.8
+pytz==2023.3
+requests==2.31.0
+six==1.16.0
+soupsieve==2.4.1
+SQLAlchemy==2.0.20
+svgwrite==1.4.3
+Tree==0.2.4
+typing_extensions==4.7.1
+tzdata==2023.3
+tzlocal-5.0.1
+urllib3==2.0.4
+Werkzeug==2.3.7
+WTForms==3.0.1

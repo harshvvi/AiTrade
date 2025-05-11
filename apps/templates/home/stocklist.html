@@ -1,0 +1,178 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Stocks {% endblock title %}
+
+{% block content %}
+
+
+<div class="header pb-6 d-flex align-items-center" 
+     style="min-height: 150px; background-image: url(/static/assets/img/theme/profile-cover.jpg); background-size: cover; background-position: center top;">
+  <!-- Mask -->
+  <span class="mask bg-gradient-default opacity-8" >
+   <span style="position: absolute; bottom : 0; right: 0; font-size:  80px; align-items: self-end;">
+       Stocks
+   </span>
+  </span>
+  <!-- Header container -->
+  <div class="col-xl-4 align-items-center py-4"></div>
+  <div class="col-xl-3 col-md-6">
+    <div class="card card-stats">
+       
+      </div>
+  </div>
+</div>
+<br>
+
+<!-- Dark table -->
+<div class="row">
+    <div class="col">
+      <div class="card bg-default shadow">
+        <div class="card-header bg-transparent border-0">
+          <h3 class="text-white mb-0">{{ category }}</h3>
+        </div>
+        
+        <div class="table-responsive">
+          <table class="table align-items-center table-dark table-flush">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col" class="sort" data-sort="name">Stock</th>
+                <th scope="col" class="sort" data-sort="budget">Price</th>
+                <th scope="col" class="sort" data-sort="status">%Change (Yesterday)</th>
+                <th scope="col" class="sort" data-sort="status">%Change (Tommorow)</th>
+                <th scope="col" class="sort">Trend</th>
+              </tr>
+            </thead>
+            <tbody class="list">
+              {% for row in data %}
+              <tr>
+                <th scope="row">
+                  <div class="media align-items-center">
+                    <div class="media-body">
+                      <span class="name mb-0 text-sm">{{ row['company'] }}</span>
+                    </div>
+                  </div>
+                </th>
+                <td class="budget">
+                    {{ "%.2f" % row['current_price'] }} INR
+                </td>
+                <td>
+                  {% if row["pre_change_past"] > 0 %}
+                  <span class="text-success mr-4">
+                    <i class="fa fa-arrow-up"></i>
+                    <span class="status">
+                        {{ "%.2f" % row["pre_change_past"] }}
+                    </span>
+                  </span>
+
+                  {% else %}
+
+                  <span class="text-danger mr-4">
+                    <i class="fa fa-arrow-down"></i>
+                    <span class="status">
+                        {{ "%.2f" % row["pre_change_past"] }}
+                    </span>
+                  </span>
+
+                  {% endif %}
+                </td>
+                <td>
+                    {% if row["pre_change_future"] > 0 %}
+                    <span class="text-success mr-4">
+                      <i class="fa fa-arrow-up"></i>
+                      <span class="status">
+                          {{ "%.2f" % row["pre_change_future"] }}
+                      </span>
+                    </span>
+  
+                    {% else %}
+  
+                    <span class="text-danger mr-4">
+                      <i class="fa fa-arrow-down"></i>
+                      <span class="status">
+                          {{ "%.2f" % row["pre_change_future"] }}
+                      </span>
+                    </span>
+  
+                    {% endif %}
+                </td>
+                <td >
+                    
+                  <div class="dropdown">
+                    <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class=""status>
+                            Show trend
+                        </span>
+                        <i class="fa  fa-sort-down"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" style="margin-top: 20px; min-width: 50vh;">
+                        {% set cur_id = row["company"] %}
+                        <canvas id="{{ cur_id }}"></canvas>
+                    </div>
+                  </div>
+                </td>
+                
+              </tr>
+              
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+
+  
+    
+{% endblock content %}
+
+{% block javascripts %}
+
+<script src="/static/assets/vendor/chart.js/dist/Chart.min.js"></script>
+<script src="/static/assets/vendor/chart.js/dist/Chart.extension.js"></script>
+
+
+<script>
+    // Sample stock data
+
+    var data = "{{ jsondata }}"
+    data = data.replace(/&#34;/g, '"');
+    data  = JSON.parse(data)
+    
+    
+    data.forEach(function(record){
+      var eid = record['company'].replace('&amp;', '&')  
+        
+        var future = Array.from({ length: 60 }, () => null).concat(record['future'])
+        future[59] = record['past'][59]
+        var element = document.getElementById(eid);
+        var ctx = element.getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [...Array(68).keys()].map(num => num + 1),
+                datasets: [{
+                    label: '',
+                    data: record['past'],
+                    borderColor: 'rgb(75, 192, 192)',
+                    fill: true,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)'
+                },
+                {
+                  label: 'Prediction',
+                  data: future,
+                  borderColor: 'rgba(255, 165, 0, 1)',
+                  fill: true,
+                  backgroundColor: 'rgba(255, 165, 0, 0.2)'
+              }
+                ]
+            }
+            
+        });
+
+    });
+   
+    
+</script>
+
+
+
+{% endblock javascripts %}
